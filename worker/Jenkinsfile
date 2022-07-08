@@ -16,7 +16,7 @@ pipeline {
             steps {
                 echo 'Running Unit Tests on worker app'
                 dir('worker') {
-                    sh 'mvn compile'
+                    sh 'mvn clean test'
                 }
             }
         }
@@ -24,14 +24,14 @@ pipeline {
             steps {
                 echo 'Packaging worker app'
                 dir('worker') {
-                    sh 'mvn compile'
+                    sh 'mvn package'
                 }
             }
         }
     }
     post {
         always {
-            echo 'Build pipeline for worker app is completed...'
+            echo 'Pipeline for worker app is completed...'
         }
     }
 }
