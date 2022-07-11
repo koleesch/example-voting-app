@@ -41,7 +41,6 @@ pipeline {
     }
     post {
         always {
-            archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
             echo 'Pipeline for worker app is completed...'
         }
     }
