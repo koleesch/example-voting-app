@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {
-        nodejs "node"
+        nodejs "NodeJS 18.4.0"
     }
     stages {
         stage('build') {
@@ -21,8 +21,7 @@ pipeline {
             }
             steps {
                 echo 'Running Unit Tests on result app'
-                dir('worker') {
-                    sh 'npm install'
+                dir('result') {
                     sh 'npm test'
                 }
             }
