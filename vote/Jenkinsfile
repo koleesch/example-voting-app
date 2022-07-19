@@ -8,13 +8,17 @@ pipeline {
         stage('build') {
             steps {
                 echo 'Build vote app'
-                sh 'pip install -r requirements.txt'
+                dir ('vote') {
+                    sh 'pip install -r requirements.txt'
+                }
             }
         }
         stage('test') {
             steps{
                 echo 'Testing vote app'
-                sh 'nosetests -v'
+                dir ('vote') {
+                    sh 'nosetests -v'
+                }
             }
         }
     }
