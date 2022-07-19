@@ -14,7 +14,7 @@ pipeline {
         stage('test') {
             steps{
                 echo 'Testing vote app'
-                'nosetests -v'
+                sh 'nosetests -v'
             }
         }
     }
