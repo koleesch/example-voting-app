@@ -8,7 +8,7 @@ pipeline {
         stage('build') {
             steps {
                 echo 'Build vote app'
-                sh 'pip -i requirements.txt'
+                sh 'pip install -r requirements.txt'
             }
         }
         stage('test') {
