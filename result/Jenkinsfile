@@ -1,8 +1,10 @@
 pipeline {
-    agent any
-    tools {
-        nodejs "NodeJS 18.4.0"
+    agent {
+        docker{
+            image 'node:lts-alpine'
+        }        
     }
+
     stages {
         stage('build') {
             when{

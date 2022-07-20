@@ -1,0 +1,31 @@
+pipeline {
+    agent {
+        docker {
+            image 'python:2.7.18-slim'
+            args '--user root'
+        }
+    }
+    stages {
+        stage('build') {
+            steps {
+                echo 'Build vote app'
+                dir ('vote') {
+                    sh 'pip install -r requirements.txt'
+                }
+            }
+        }
+        stage('test') {
+            steps{
+                echo 'Testing vote app'
+                dir ('vote') {
+                    sh 'nosetests -v'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            echo 'Pipeline for vote app is completed...'
+        }
+    }
+}
