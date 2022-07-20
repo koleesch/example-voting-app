@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'python:3.11.0b4-slim-buster'
+            args '--user root'
         }
     }
     stages {
