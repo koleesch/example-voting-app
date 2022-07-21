@@ -37,9 +37,28 @@ pipeline {
                 echo 'Packaging worker app'
                 dir('worker') {
                     sh 'mvn package -DskipTests'
+                    archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
                 }
             }
         }
+        stage('docker-package') {
+            when{
+                branch 'master'
+                changeset "**/worker/**"
+            }
+            steps {
+                echo 'Packaging worker app with docker'
+                script {
+                    docker.withRegistry('https://index.docker.com/v1', 'dockerlogin') {
+                        def workerImage = docker.build("koleesch/worker:v${env.BUILD_ID}", "./worker")
+
+                        workerImage.push()
+                        workerImage.push("${env.BRANCH_NAME}")
+                    }
+                }
+            }
+        }
+
     }
     post {
         always {
