@@ -57,7 +57,7 @@ pipeline {
         stage('docker-package') {
             agent any
             when{
-
+                branch 'master'
                 changeset "**/worker/**"
             }
             steps {
@@ -67,7 +67,7 @@ pipeline {
                         def workerImage = docker.build("koleesch/worker:v${env.BUILD_ID}", "./worker")
 
                         workerImage.push()
-                        workerImage.push("latest")
+                        workerImage.push("${env.BRANCH_NAME}")
                     }
                 }
             }
