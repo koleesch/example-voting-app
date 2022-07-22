@@ -1,12 +1,14 @@
 pipeline {
-    agent {
-        docker {
-            image 'python:2.7.18-slim'
-            args '--user root'
-        }
-    }
+    agent none
     stages {
         stage('build') {
+            agent {
+                docker {
+                    image 'python:2.7.18-slim'
+                    args '--user root'
+                }
+            }
+
             steps {
                 echo 'Build vote app'
                 dir ('vote') {
@@ -15,6 +17,13 @@ pipeline {
             }
         }
         stage('test') {
+            agent {
+                docker {
+                    image 'python:2.7.18-slim'
+                    args '--user root'
+                }
+            }
+
             steps{
                 echo 'Testing vote app'
                 dir ('vote') {
@@ -22,6 +31,24 @@ pipeline {
                 }
             }
         }
+        stage('docker-package') {
+            agent any
+            when{
+                branch 'master'
+                changeset "**/vote/**"
+            }
+            steps {
+                echo 'Packaging vote app with docker'
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') {
+                        def workerImage = docker.build("koleesch/vote:v${env.BUILD_ID}", "./vote")
+                        workerImage.push()
+                        workerImage.push("${env.BRANCH_NAME}")
+                    }
+                }
+            }
+        }
+
     }
     post {
         always {
